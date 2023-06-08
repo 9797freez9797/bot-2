@@ -13,34 +13,34 @@ logging.basicConfig(level=logging.INFO)
 # Initialize bot and dispatcher
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
-
-main_keyboard = types.ReplyKeyboardMarkup()
-main_keyboard.add(types.KeyboardButton('Люди'))
-main_keyboard.add(types.KeyboardButton('Космос'))
-main_keyboard.add(types.KeyboardButton('Природа'))
-
+    
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
     text = 'Привіт!\n' \
            'Яку картинку хочеш побачити?'
-    await message.reply(text, reply_markup=main_keyboard)
+    await message.reply(text)
 
 @dp.message_handler()
 async def echo(message: types.Message):
     text = message.text.lower()
 
-    if 'люди' in text:
-        list_of_photos = os.listdir('photos/People')
-        photo = random.choice(list_of_photos)
-        await message.answer_photo(types.InputFile(f'photos/People/{photo}'), caption='Люди')
-    elif 'космос' in text:
-        list_of_photos = os.listdir('photos/Space')
-        photo = random.choice(list_of_photos)
-        await message.answer_photo(types.InputFile(f'photos/Space/{photo}'), caption='Космос')
-    elif 'природа' in text:
-        list_of_photos = os.listdir('photos/Nature')
-        photo = random.choice(list_of_photos)
-        await message.answer_photo(types.InputFile(f'photos/Nature/{photo}'), caption='Природа')
+    if 'картинки' in text:
+        if 'люди' in text:
+            list_of_photos = os.listdir('photos/People')
+            photo = random.choice(list_of_photos)
+            await message.answer_photo(types.InputFile(f'photos/People/{photo}'), caption='Люди')
+        elif 'космос' in text:
+            list_of_photos = os.listdir('photos/Space')
+            photo = random.choice(list_of_photos)
+            await message.answer_photo(types.InputFile(f'photos/Space/{photo}'), caption='Космос')
+        elif 'природа' in text:
+            list_of_photos = os.listdir('photos/Nature')
+            photo = random.choice(list_of_photos)
+            await message.answer_photo(types.InputFile(f'photos/Nature/{photo}'), caption='Природа')
+        else:
+            await message.reply("Вибачте, я не розумію цю категорію.")
+    else:
+        await message.reply("Вибачте, я не розумію вашого повідомлення.")
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
